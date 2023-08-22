@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_chat/user1.dart';
 import 'package:flutter_chat/user2.dart';
+import 'package:flutter_chat/user3.dart';
 import 'users_list.dart';
 import 'chat.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -16,6 +17,7 @@ void main() {
         '/chat': (context) => const Chat(),
         '/user1': (context) => const User1(),
         '/user2': (context) => const User2(),
+        '/user3': (context) => const User3(),
       },
     ),
   );
