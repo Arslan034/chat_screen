@@ -1,8 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
-class User2 extends StatelessWidget {
+class User2 extends StatefulWidget {
   const User2({Key? key}) : super(key: key);
+
+  @override
+  // ignore: library_private_types_in_public_api
+  _User2State createState() => _User2State();
+}
+
+class _User2State extends State<User2> {
+  List<String> messages = [];
+  final TextEditingController _messageController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -15,18 +24,39 @@ class User2 extends StatelessWidget {
         decoration: const BoxDecoration(
           image: DecorationImage(
             image: CachedNetworkImageProvider(
-                'https://phonoteka.org/uploads/posts/2021-04/1618504991_10-p-fon-dlya-messendzhera-11.jpg'),
-            fit: BoxFit.cover, // для подгонки изображения к размерам контейнера
+                'https://celes.club/uploads/posts/2022-11/1667313746_1-celes-club-p-standartnii-fon-vatsap-krasivo-1.jpg'),
+            fit: BoxFit.cover, // для изображения к размерам контейнера
           ),
         ),
         child: SafeArea(
           child: Column(
             children: [
               Expanded(
-                child: ListView(
-                  children: [
-                    //Сообщения есть только в файле чат, чтобы весь код не был одинаковым.
-                  ],
+                child: ListView.builder(
+                  itemCount: messages.length,
+                  itemBuilder: (context, index) {
+                    return Align(
+                      alignment: Alignment.centerRight,
+                      child: Container(
+                        margin: const EdgeInsets.symmetric(
+                            vertical: 5, horizontal: 10),
+                        padding: const EdgeInsets.all(10),
+                        decoration: BoxDecoration(
+                          color: const Color.fromARGB(255, 176, 1, 167),
+                          borderRadius: BorderRadius.circular(10),
+                          border: Border.all(
+                            color: const Color.fromARGB(1, 1, 1, 1),
+                          ),
+                        ),
+                        child: Text(
+                          messages[index],
+                          style: const TextStyle(
+                            color: Color.fromARGB(255, 255, 255, 255),
+                          ),
+                        ),
+                      ),
+                    );
+                  },
                 ),
               ),
               Padding(
@@ -35,12 +65,14 @@ class User2 extends StatelessWidget {
                   children: [
                     Expanded(
                       child: TextField(
+                        controller: _messageController,
                         decoration: InputDecoration(
                           hintText: 'Введите сообщение',
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(20.0),
                           ),
-                          icon: const Icon(Icons.sentiment_very_satisfied,
+                          icon: const Icon(
+                            Icons.sentiment_very_satisfied,
                               color: Colors.white),
                           fillColor: const Color.fromARGB(255, 176, 1, 167),
                           filled: true,
@@ -48,7 +80,14 @@ class User2 extends StatelessWidget {
                       ),
                     ),
                     IconButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        if (_messageController.text.isNotEmpty) {
+                          setState(() {
+                            messages.add(_messageController.text);
+                            _messageController.clear();
+                          });
+                        }
+                      },
                       icon: const Icon(
                         Icons.send,
                         color: Colors.white,
