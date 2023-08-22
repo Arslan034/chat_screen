@@ -1,8 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
-class Chat extends StatelessWidget {
+class Chat extends StatefulWidget {
   const Chat({Key? key}) : super(key: key);
+
+  @override
+  // ignore: library_private_types_in_public_api
+  _ChatState createState() => _ChatState();
+}
+
+class _ChatState extends State<Chat> {
+  List<String> messages = [];
+  final TextEditingController _messageController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -15,19 +24,39 @@ class Chat extends StatelessWidget {
         decoration: const BoxDecoration(
           image: DecorationImage(
             image: CachedNetworkImageProvider(
-                'https://phonoteka.org/uploads/posts/2021-04/1618504991_10-p-fon-dlya-messendzhera-11.jpg'),
-            fit: BoxFit.cover, // для подгонки изображения к размерам контейнера
+                'https://celes.club/uploads/posts/2022-11/1667313746_1-celes-club-p-standartnii-fon-vatsap-krasivo-1.jpg'),
+            fit: BoxFit.cover, // для изображения к размерам контейнера
           ),
         ),
         child: SafeArea(
           child: Column(
             children: [
               Expanded(
-                child: ListView(
-                  children: const [
-                    MessageBubble(text: 'Привет!', fon: false),
-                    MessageBubble(text: 'Hello', fon: true),
-                  ],
+                child: ListView.builder(
+                  itemCount: messages.length,
+                  itemBuilder: (context, index) {
+                    return Align(
+                      alignment: Alignment.centerRight,
+                      child: Container(
+                        margin: const EdgeInsets.symmetric(
+                            vertical: 5, horizontal: 10),
+                        padding: const EdgeInsets.all(10),
+                        decoration: BoxDecoration(
+                          color: Color.fromARGB(255, 12, 245, 4), //фон сообщения
+                          borderRadius: BorderRadius.circular(10),
+                          border: Border.all(
+                            color: const Color.fromARGB(1, 1, 1, 1),
+                          ), //обводка сообщения
+                        ),
+                        child: Text(
+                          messages[index],
+                          style: const TextStyle(
+                            color: Color.fromARGB(255, 255, 255, 255), //цвет текста
+                          ),
+                        ),
+                      ),
+                    );
+                  },
                 ),
               ),
               Padding(
@@ -36,12 +65,14 @@ class Chat extends StatelessWidget {
                   children: [
                     Expanded(
                       child: TextField(
+                        controller: _messageController,
                         decoration: InputDecoration(
-                          hintText: 'Введите сообщение',
+                          hintText: 'Сообщение',
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(20),
                           ),
-                          icon: const Icon(Icons.sentiment_very_satisfied,
+                          icon: const Icon(
+                            Icons.sentiment_very_satisfied,
                               color: Colors.white),
                           fillColor: const Color.fromARGB(255, 16, 226, 9),
                           filled: true,
@@ -49,40 +80,24 @@ class Chat extends StatelessWidget {
                       ),
                     ),
                     IconButton(
-                      onPressed: () {},
-                      icon: const Icon(Icons.send, color: Colors.white),
+                      onPressed: () {
+                        if (_messageController.text.isNotEmpty) {
+                          setState(() {
+                            messages.add(_messageController.text);
+                            _messageController.clear();
+                          });
+                        }
+                      },
+                      icon: const Icon(
+                        Icons.send, 
+                        color: Colors.white
+                        ),
                     ),
                   ],
                 ),
               ),
             ],
           ),
-        ),
-      ),
-    );
-  }
-}
-
-class MessageBubble extends StatelessWidget {
-  final String text;
-  final bool fon;
-
-  const MessageBubble({super.key, required this.text, required this.fon});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      alignment: fon ? Alignment.centerRight : Alignment.centerLeft,
-      child: Container(
-        margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
-        padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
-        decoration: BoxDecoration(
-          color: fon ? Colors.green : Colors.blue,
-          borderRadius: BorderRadius.circular(15),
-        ),
-        child: Text(
-          text,
-          style: const TextStyle(color: Colors.white),
         ),
       ),
     );
